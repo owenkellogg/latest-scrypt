@@ -1,21 +1,16 @@
-import axios from 'axios'
 import { Sellable } from './src/contracts/sellable'
 import {
     buildPublicKeyHashScript,
-    Ripemd160,
     hash160,
     findSig,
     MethodCallOptions,
     bsv,
     TestWallet,
     DefaultProvider,
-    sha256,
     toByteString,
     PubKey,
     ContractTransaction,
 } from 'scrypt-ts'
-
-import { decode } from 'bs58'
 
 import * as dotenv from 'dotenv'
 
@@ -40,11 +35,6 @@ async function main() {
     const amount = parseInt(process.argv[4] || '1')
 
     const ownerAddress = process.argv[2] || privateKey.toPublicKey().toHex()
-
-    console.log(privateKey.publicKey.toString())
-    console.log(privateKey.publicKey.toAddress().toString(), '--address--')
-
-    //process.exit(0)
 
     const owner = PubKey(ownerAddress)
 
@@ -80,8 +70,6 @@ async function main() {
             },
         } as MethodCallOptions<Sellable>
     )
-
-    console.log('Sellable contract call Tx: ', callTx)
 
     console.log('Sellable contract called: ', callTx.id)
 
@@ -136,7 +124,9 @@ async function main() {
 
     console.log({ buyTx: buyTx.id })
 
-    const thirdInstance = nextInstance.next()
+    const thirdInstance = Sellable.fromTx(buyTx, 0)
+
+    thirdInstance.connect(signer)
 
     const { tx: removeTx } = await thirdInstance.methods.remove((sigResps) => {
         return findSig(sigResps, privateKey.publicKey)

@@ -19,7 +19,7 @@ export class PersonalInterest extends SmartContract {
     @prop(true)
     weight: bigint
 
-    constructor(topic: ByteString, owner: PubKey, weight = 1n) {
+    constructor(topic: ByteString, owner: PubKey, weight: bigint = 1n) {
         super(...arguments)
         this.topic = topic
         this.owner = owner

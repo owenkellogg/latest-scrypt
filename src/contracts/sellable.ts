@@ -21,7 +21,7 @@ export class Sellable extends SmartContract {
     @prop(true)
     price: bigint
 
-    constructor(topic: ByteString, owner: PubKey, price = 1n) {
+    constructor(topic: ByteString, owner: PubKey, price: bigint = 0n) {
         super(...arguments)
         this.topic = topic
         this.owner = owner
